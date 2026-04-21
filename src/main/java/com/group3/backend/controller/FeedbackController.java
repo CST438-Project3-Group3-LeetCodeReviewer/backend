@@ -21,17 +21,24 @@ public class FeedbackController {
     private FeedbackRepository feedbackRepository;
 
     @PostMapping("/{id}/feedback")
-    public Feedback creatFeedback(@PathVariable Long id,@RequestBody Feedback feedback){
-        feedback.setSubmissionId(id);
-        feedback.setCreatedAt(LocalDateTime.now());
-        return feedbackRepository.save(feedback);
+    public Feedback createFeedback(@PathVariable Long id, @RequestBody Feedback feedback) {
+    feedback.setSubmissionId(id);
+    feedback.setCreatedAt(LocalDateTime.now());
+    return feedbackRepository.save(feedback);
     }
+
+
+    // @PostMapping("/{id}/feedback")
+    // public String test(@RequestBody String raw) {
+    // return raw;
+    // }
+
     @GetMapping("/feedback/user/{userId}")
     public List<Feedback> getUserFeedback(@PathVariable Long userId){
-        return feedbackRepository.findbyUserId(userId);
+        return feedbackRepository.findByUserId(userId);
     }
     @GetMapping("/{id}/feedback")
     public List<Feedback> getSubmissionFeedback(@PathVariable Long id) {
-        return feedbackRepository.findbySubmissionId(id);
+        return feedbackRepository.findBySubmissionId(id);
     }
 }
