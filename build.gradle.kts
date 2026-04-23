@@ -18,13 +18,11 @@ repositories {
 }
 
 dependencies {
-	//TEMP memort DB for testing please remove once real DB is created
-	implementation("com.h2database:h2")
+	implementation("org.postgresql:postgresql")
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
