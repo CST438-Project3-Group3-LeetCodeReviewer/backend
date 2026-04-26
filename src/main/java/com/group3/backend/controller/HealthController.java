@@ -11,12 +11,12 @@ public class HealthController {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
-    @GetMapping("/api/health")
+    @GetMapping({"/health", "/api/health"})
     public String health() {
         return "Backend is running";
     }
 
-    @GetMapping("/api/health/db")
+    @GetMapping({"/health/db", "/api/health/db"})
     public String dbHealth() {
         try {
             feedbackRepository.count();
