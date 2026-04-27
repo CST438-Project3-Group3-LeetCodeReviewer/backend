@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * REST controller for managing user profile and account endpoints.
@@ -26,14 +27,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}/profile")
-    public ResponseEntity<User> getUserProfile(@PathVariable Long id) {
+    public ResponseEntity<User> getUserProfile(@PathVariable UUID id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/profile")
-    public ResponseEntity<User> updateUserProfile(@PathVariable Long id,
+    public ResponseEntity<User> updateUserProfile(@PathVariable UUID id,
                                                   @RequestBody UpdateUserProfileRequest request) {
         Optional<User> existingUser = userRepository.findById(id);
 
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/account")
-    public ResponseEntity<Void> deleteUserAccount(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUserAccount(@PathVariable UUID id) {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {

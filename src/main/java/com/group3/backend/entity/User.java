@@ -2,6 +2,7 @@ package com.group3.backend.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Entity representing an application user profile.
@@ -14,8 +15,7 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -32,7 +32,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String email, String fullName, String oauthProvider, LocalDateTime createdAt) {
+    public User(UUID id, String email, String fullName, String oauthProvider, LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
@@ -40,11 +40,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
