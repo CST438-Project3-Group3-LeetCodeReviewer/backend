@@ -1,6 +1,6 @@
 package com.group3.backend.controller;
-import com.group3.backend.entity.Feedback;
 
+import com.group3.backend.entity.Feedback;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,8 +28,10 @@ public class FeedbackControllerTest {
 
     @Test
     void testCreateFeedback() throws Exception {
+        UUID userId = UUID.randomUUID();
+
         Feedback feedback = new Feedback();
-        feedback.setUserId(1L);
+        feedback.setUserId(userId);
         feedback.setFeedbackText("Test feedback");
         feedback.setScore(80);
 
@@ -35,16 +39,17 @@ public class FeedbackControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(feedback)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value(1))
+                .andExpect(jsonPath("$.userId").value(userId.toString()))
                 .andExpect(jsonPath("$.feedbackText").value("Test feedback"))
                 .andExpect(jsonPath("$.score").value(80));
     }
 
     @Test
     void testGetFeedbackByUser() throws Exception {
-        // First create feedback
+        UUID userId = UUID.randomUUID();
+
         Feedback feedback = new Feedback();
-        feedback.setUserId(2L);
+        feedback.setUserId(userId);
         feedback.setFeedbackText("Another test");
         feedback.setScore(70);
 
@@ -53,16 +58,17 @@ public class FeedbackControllerTest {
                 .content(objectMapper.writeValueAsString(feedback)))
                 .andExpect(status().isOk());
 
-        // Then fetch it
-        mockMvc.perform(get("/submissions/feedback/user/2"))
+        mockMvc.perform(get("/submissions/feedback/user/" + userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].userId").value(2));
+                .andExpect(jsonPath("$[0].userId").value(userId.toString()));
     }
 
     @Test
     void testGetFeedbackBySubmission() throws Exception {
+        UUID userId = UUID.randomUUID();
+
         Feedback feedback = new Feedback();
-        feedback.setUserId(3L);
+        feedback.setUserId(userId);
         feedback.setFeedbackText("Submission test");
         feedback.setScore(90);
 
