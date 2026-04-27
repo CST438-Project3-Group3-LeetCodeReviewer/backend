@@ -18,7 +18,7 @@ public class FeedbackController {
     private FeedbackRepository feedbackRepository;
 
     /**
-     * 🔹 TEMP endpoint (for testing only)
+     * TEMP endpoint (for testing only)
      * Later this should be created automatically after submission
      */
     @PostMapping("/{id}/feedback")
@@ -30,7 +30,7 @@ public class FeedbackController {
     }
 
     /**
-     * 🔹 Get feedback by USER (UUID FIXED)
+     * Get feedback by USER (UUID FIXED)
      */
     @GetMapping("/feedback/user/{userId}")
     public List<Feedback> getUserFeedback(@PathVariable UUID userId) {
@@ -38,7 +38,7 @@ public class FeedbackController {
     }
 
     /**
-     * 🔹 Get feedback for ONE submission (MAIN ENDPOINT your UI will use)
+     * Get feedback for ONE submission (MAIN ENDPOINT your UI will use)
      */
     @GetMapping("/{id}/feedback")
     public Feedback getSubmissionFeedback(@PathVariable Long id) {
