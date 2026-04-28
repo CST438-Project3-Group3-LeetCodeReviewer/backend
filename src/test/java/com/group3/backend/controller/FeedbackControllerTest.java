@@ -43,7 +43,7 @@ public class FeedbackControllerTest {
                 .andExpect(jsonPath("$.feedbackText").value("Test feedback"))
                 .andExpect(jsonPath("$.score").value(80));
     }
-//BROKEN not sure why will fix later
+
     @Test
     void testGetFeedbackByUser() throws Exception {
         UUID userId = UUID.randomUUID();
@@ -79,6 +79,6 @@ public class FeedbackControllerTest {
 
         mockMvc.perform(get("/submissions/3/feedback"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.submissionId").value(3)); // ✅ NOT [0]
+                .andExpect(jsonPath("$.submissionId").value(3)); 
     }
 }
