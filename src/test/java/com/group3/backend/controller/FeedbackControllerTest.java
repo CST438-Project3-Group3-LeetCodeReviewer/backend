@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,9 +16,11 @@ import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class FeedbackControllerTest {
 
     @Autowired
@@ -41,7 +44,8 @@ public class FeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(userId.toString()))
                 .andExpect(jsonPath("$.feedbackText").value("Test feedback"))
-                .andExpect(jsonPath("$.score").value(80));
+                .andExpect(jsonPath("$.score").value(80))
+                .andExpect(jsonPath("$.submissionId").value(1));
     }
 
     @Test
@@ -60,7 +64,9 @@ public class FeedbackControllerTest {
 
         mockMvc.perform(get("/submissions/feedback/user/" + userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].userId").value(userId.toString()));
+                .andExpect(jsonPath("$[*].userId", hasItem(userId.toString())))
+                .andExpect(jsonPath("$[*].feedbackText", hasItem("Another test")))
+                .andExpect(jsonPath("$[*].score", hasItem(70)));
     }
 
     @Test
@@ -79,6 +85,8 @@ public class FeedbackControllerTest {
 
         mockMvc.perform(get("/submissions/3/feedback"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].submissionId").value(3));
+                .andExpect(jsonPath("$[*].submissionId", hasItem(3)))
+                .andExpect(jsonPath("$[*].feedbackText", hasItem("Submission test")))
+                .andExpect(jsonPath("$[*].score", hasItem(90)));
     }
 }
