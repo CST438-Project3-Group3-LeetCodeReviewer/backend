@@ -1,7 +1,7 @@
 package com.group3.backend.controller;
 
 import com.group3.backend.entity.Problem;
-import com.group3.backend.repository.ProblemRepository;
+import com.group3.backend.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,15 +12,15 @@ import java.util.List;
 public class ProblemController {
 
     @Autowired
-    private ProblemRepository problemRepository;
+    private ProblemService problemService;
 
     @GetMapping
     public List<Problem> getAllProblems() {
-        return problemRepository.findAll();
+        return problemService.getAllProblems();
     }
 
     @GetMapping("/{id}")
     public Problem getProblemById(@PathVariable Long id) {
-        return problemRepository.findById(id).orElse(null);
+        return problemService.getProblemById(id).orElse(null);
     }
 }
