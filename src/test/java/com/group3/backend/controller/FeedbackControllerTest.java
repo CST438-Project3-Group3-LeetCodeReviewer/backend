@@ -1,20 +1,20 @@
 package com.group3.backend.controller;
 
-import com.group3.backend.entity.Feedback;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.group3.backend.entity.Feedback;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -44,24 +44,24 @@ public class FeedbackControllerTest {
                 .andExpect(jsonPath("$.score").value(80));
     }
 //BROKEN not sure why will fix later
-//     @Test
-//     void testGetFeedbackByUser() throws Exception {
-//         UUID userId = UUID.randomUUID();
+    @Test
+    void testGetFeedbackByUser() throws Exception {
+        UUID userId = UUID.randomUUID();
 
-//         Feedback feedback = new Feedback();
-//         feedback.setUserId(userId);
-//         feedback.setFeedbackText("Another test");
-//         feedback.setScore(70);
+        Feedback feedback = new Feedback();
+        feedback.setUserId(userId);
+        feedback.setFeedbackText("Another test");
+        feedback.setScore(70);
 
-//         mockMvc.perform(post("/submissions/2/feedback")
-//                 .contentType(MediaType.APPLICATION_JSON)
-//                 .content(objectMapper.writeValueAsString(feedback)))
-//                 .andExpect(status().isOk());
+        mockMvc.perform(post("/submissions/2/feedback")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(feedback)))
+                .andExpect(status().isOk());
 
-//         mockMvc.perform(get("/submissions/feedback/user/" + userId))
-//                 .andExpect(status().isOk())
-//                 .andExpect(jsonPath("$[0].userId").value(userId.toString()));
-//     }
+        mockMvc.perform(get("/submissions/user/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].userId").value(userId.toString()));
+    }
 
     @Test
     void testGetFeedbackBySubmission() throws Exception {
