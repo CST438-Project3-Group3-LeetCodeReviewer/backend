@@ -11,7 +11,7 @@ import com.group3.backend.entity.Feedback;
 import com.group3.backend.repository.FeedbackRepository;
 
 @RestController
-@RequestMapping("/submissions")
+@RequestMapping("/api/submissions")
 public class FeedbackController {
 
     @Autowired
