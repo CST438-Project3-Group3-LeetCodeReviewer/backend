@@ -34,6 +34,8 @@ dependencies {
 	//I think we should leave this for local test files it wont break supabase
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("com.h2database:h2")
+
+	implementation("com.auth0:java-jwt:4.4.0")
 }
 
 tasks.withType<Test> {
