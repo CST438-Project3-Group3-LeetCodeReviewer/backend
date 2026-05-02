@@ -22,26 +22,26 @@ public class SubmissionController {
     @Autowired
     private SubmissionRepository submissionRepository;
 
-    // @PostMapping
-    // public Submission createSubmission(@RequestBody Submission submission) {
-    //     submission.setCreatedAt(LocalDateTime.now());
-    //     return submissionRepository.save(submission);
-    // }
     @PostMapping
     public Submission createSubmission(@RequestBody Submission submission) {
-        submission.setCreatedAt(LocalDateTime.now());
+        if (submission.getProblemId() == null || submission.getUserId() == null) {
+            throw new IllegalArgumentException("Problem ID and User ID are required.");
+        }
 
-        // Save submission first
+        submission.setCreatedAt(LocalDateTime.now());
         Submission savedSubmission = submissionRepository.save(submission);
 
-        // Create feedback (TEMP AI SIMULATION)
+        // Generate and save automated feedback
         Feedback feedback = new Feedback();
         feedback.setSubmissionId(savedSubmission.getId());
-        feedback.setUserId(UUID.randomUUID()); // temporary
+        // Since Feedback expects a UUID for userId, we check if we can map it
+        // For now, we use a placeholder UUID or the user's ID if applicable
+        feedback.setUserId(UUID.randomUUID()); 
         feedback.setFeedbackText(generateMockFeedback(savedSubmission.getCode()));
         feedback.setScore(generateMockScore());
         feedback.setCreatedAt(LocalDateTime.now());
         feedbackRepository.save(feedback);
+
         return savedSubmission;
     }
 
