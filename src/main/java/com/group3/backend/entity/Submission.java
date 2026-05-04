@@ -2,6 +2,7 @@ package com.group3.backend.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 public class Submission {
@@ -11,7 +12,7 @@ public class Submission {
     private Long id;
 
     private Long problemId;
-    private Long userId;
+    private UUID userId;
 
     @Column(columnDefinition = "TEXT")
     private String code;
@@ -34,11 +35,11 @@ public class Submission {
         this.problemId = problemId;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

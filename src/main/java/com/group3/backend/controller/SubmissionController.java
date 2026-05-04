@@ -1,16 +1,21 @@
 package com.group3.backend.controller;
 
+import com.group3.backend.dto.SubmissionRequest;
+import com.group3.backend.entity.Problem;
 import com.group3.backend.repository.FeedbackRepository;
-import java.util.UUID;
 
 import com.group3.backend.entity.Feedback;
 import com.group3.backend.entity.Submission;
+import com.group3.backend.repository.ProblemRepository;
 import com.group3.backend.repository.SubmissionRepository;
+import com.group3.backend.service.GeminiReviewService;
+import com.group3.backend.service.GeminiReviewService.ReviewResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/submissions")
@@ -22,45 +27,68 @@ public class SubmissionController {
     @Autowired
     private SubmissionRepository submissionRepository;
 
+    @Autowired
+    private ProblemRepository problemRepository;
+
+    @Autowired
+    private GeminiReviewService geminiReviewService;
+
     @PostMapping
-    public Submission createSubmission(@RequestBody Submission submission) {
-        if (submission.getProblemId() == null || submission.getUserId() == null) {
-            throw new IllegalArgumentException("Problem ID and User ID are required.");
+    public Submission createSubmission(@RequestBody SubmissionRequest request) {
+        if (request.getProblemId() == null) {
+            throw new IllegalArgumentException("Problem ID is required.");
         }
 
+        String language = normalizeLanguage(request.getLanguage());
+        UUID userId = parseUserId(request.getUserId());
+        Submission submission = new Submission();
+        submission.setProblemId(request.getProblemId());
+        submission.setUserId(userId);
+        submission.setCode(request.getCode());
+        submission.setTimeTaken(request.getTimeTaken());
+        submission.setStatus(request.getStatus() == null ? "Submitted" : request.getStatus());
         submission.setCreatedAt(LocalDateTime.now());
+
         Submission savedSubmission = submissionRepository.save(submission);
 
-        // Generate and save automated feedback
+        Problem problem = problemRepository.findById(savedSubmission.getProblemId()).orElse(null);
+        ReviewResult review = geminiReviewService.reviewSubmission(problem, savedSubmission.getCode(), language);
+        savedSubmission.setStatus(review.status());
+        savedSubmission = submissionRepository.save(savedSubmission);
+
         Feedback feedback = new Feedback();
         feedback.setSubmissionId(savedSubmission.getId());
-        // Since Feedback expects a UUID for userId, we check if we can map it
-        // For now, we use a placeholder UUID or the user's ID if applicable
-        feedback.setUserId(UUID.randomUUID()); 
-        feedback.setFeedbackText(generateMockFeedback(savedSubmission.getCode()));
-        feedback.setScore(generateMockScore());
+        feedback.setUserId(userId);
+        feedback.setFeedbackText(review.feedbackText());
+        feedback.setScore(review.score());
         feedback.setCreatedAt(LocalDateTime.now());
         feedbackRepository.save(feedback);
 
         return savedSubmission;
     }
 
-    private String generateMockFeedback(String code) {
-        if (code == null || code.length() < 20) {
-            return "Your solution is too short. Make sure you fully implement the logic.";
-        } else if (code.contains("for") || code.contains("while")) {
-            return "Good use of loops. Consider optimizing time complexity if possible.";
-        } else {
-            return "Clean structure, but consider edge cases and input validation.";
+    private String normalizeLanguage(String language) {
+        if (language == null || language.isBlank()) {
+            return "python";
         }
-    }
 
-    private int generateMockScore() {
-        return (int)(Math.random() * 40) + 60; // 60–100
+        return language.trim().toLowerCase();
     }
 
     @GetMapping("/user/{userId}")
-    public List<Submission> getUserSubmissions(@PathVariable Long userId) {
+    public List<Submission> getUserSubmissions(@PathVariable UUID userId) {
         return submissionRepository.findByUserId(userId);
+    }
+
+    private UUID parseUserId(String userId) {
+        if (userId == null || userId.isBlank()) {
+            return null;
+        }
+
+        try {
+            return UUID.fromString(userId);
+        } catch (IllegalArgumentException error) {
+            throw new IllegalArgumentException("User ID must be a valid UUID.");
+        }
     }
 }

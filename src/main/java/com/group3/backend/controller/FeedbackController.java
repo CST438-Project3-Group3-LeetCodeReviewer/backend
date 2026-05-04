@@ -11,14 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/submissions")
 public class FeedbackController {
 
     @Autowired
     private FeedbackRepository feedbackRepository;
 
     //  CREATE feedback for a submission
-    @PostMapping("/{submissionId}/feedback")
+    @PostMapping({"/submissions/{submissionId}/feedback", "/api/submissions/{submissionId}/feedback"})
     public Feedback createFeedback(
             @PathVariable Long submissionId,
             @RequestBody Feedback feedback) {
@@ -34,7 +33,7 @@ public class FeedbackController {
     }
 
     //  GET feedback by submission
-    @GetMapping("/{submissionId}/feedback")
+    @GetMapping({"/submissions/{submissionId}/feedback", "/api/submissions/{submissionId}/feedback"})
     public Feedback getFeedbackBySubmission(@PathVariable Long submissionId) {
         return feedbackRepository
                 .findBySubmissionId(submissionId)
@@ -42,7 +41,7 @@ public class FeedbackController {
     }
 
     //  GET feedback by user (UUID)
-    @GetMapping("/user/{userId}")
+    @GetMapping("/submissions/user/{userId}")
     public List<Feedback> getFeedbackByUser(@PathVariable UUID userId) {
         List<Feedback> feedbackList = feedbackRepository.findByUserId(userId);
 
