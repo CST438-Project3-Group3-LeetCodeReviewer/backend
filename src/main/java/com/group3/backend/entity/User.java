@@ -1,7 +1,7 @@
 package com.group3.backend.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -15,24 +15,25 @@ import java.util.UUID;
 public class User {
 
     @Id
+    @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Column(nullable = false)
+    @Column(name = "oauth_provider", nullable = false)
     private String oauthProvider;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
 
     public User() {
     }
 
-    public User(UUID id, String email, String fullName, String oauthProvider, LocalDateTime createdAt) {
+    public User(UUID id, String email, String fullName, String oauthProvider, OffsetDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
@@ -72,11 +73,11 @@ public class User {
         this.oauthProvider = oauthProvider;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }
