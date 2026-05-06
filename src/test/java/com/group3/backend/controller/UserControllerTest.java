@@ -3,6 +3,7 @@ package com.group3.backend.controller;
 import com.group3.backend.dto.UpdateUserProfileRequest;
 import com.group3.backend.entity.User;
 import com.group3.backend.repository.UserRepository;
+import com.group3.backend.service.SupabaseTokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,14 @@ import static org.mockito.Mockito.*;
 public class UserControllerTest {
 
     private UserRepository userRepository;
+    private SupabaseTokenService tokenService;
     private UserController userController;
 
     @BeforeEach
     void setUp() {
         userRepository = mock(UserRepository.class);
-        userController = new UserController(userRepository);
+        tokenService = mock(SupabaseTokenService.class);
+        userController = new UserController(userRepository, tokenService);
     }
 
     @Test

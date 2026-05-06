@@ -1,6 +1,7 @@
 package com.group3.backend.controller;
 
 import com.group3.backend.dto.SubmissionRequest;
+import com.group3.backend.dto.SubmissionSummaryDto;
 import com.group3.backend.entity.Problem;
 import com.group3.backend.repository.FeedbackRepository;
 
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,6 +81,56 @@ public class SubmissionController {
     @GetMapping("/user/{userId}")
     public List<Submission> getUserSubmissions(@PathVariable UUID userId) {
         return submissionRepository.findByUserId(userId);
+    }
+
+    @GetMapping("/user/{userId}/summary")
+    public List<SubmissionSummaryDto> getUserSubmissionSummaries(@PathVariable UUID userId) {
+        return submissionRepository.findByUserId(userId).stream()
+                .sorted(Comparator.comparing(Submission::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .reversed())
+                .map(this::toSubmissionSummary)
+                .toList();
+    }
+
+    private SubmissionSummaryDto toSubmissionSummary(Submission submission) {
+        String problemTitle = problemRepository.findById(submission.getProblemId())
+                .map(Problem::getTitle)
+                .orElse("Unknown problem");
+
+        return feedbackRepository.findBySubmissionId(submission.getId())
+                .map(feedback -> new SubmissionSummaryDto(
+                        submission.getId(),
+                        submission.getProblemId(),
+                        problemTitle,
+                        submission.getUserId(),
+                        submission.getStatus(),
+                        submission.getTimeTaken(),
+                        submission.getCreatedAt(),
+                        feedback.getScore(),
+                        previewText(feedback.getFeedbackText(), 160)
+                ))
+                .orElseGet(() -> new SubmissionSummaryDto(
+                        submission.getId(),
+                        submission.getProblemId(),
+                        problemTitle,
+                        submission.getUserId(),
+                        submission.getStatus(),
+                        submission.getTimeTaken(),
+                        submission.getCreatedAt(),
+                        null,
+                        null
+                ));
+    }
+
+    private static String previewText(String text, int maxLen) {
+        if (text == null || text.isBlank()) {
+            return null;
+        }
+        String trimmed = text.trim().replaceAll("\\s+", " ");
+        if (trimmed.length() <= maxLen) {
+            return trimmed;
+        }
+        return trimmed.substring(0, maxLen) + "…";
     }
 
     private UUID parseUserId(String userId) {
