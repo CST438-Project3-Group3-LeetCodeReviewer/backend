@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +35,7 @@ public class UserControllerTest {
                 "mauricio@example.com",
                 "Mauricio Reynoso",
                 "github",
-                LocalDateTime.now()
+                OffsetDateTime.now()
         );
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -70,7 +70,7 @@ public class UserControllerTest {
                 "mauricio@example.com",
                 "Old Name",
                 "github",
-                LocalDateTime.now()
+                OffsetDateTime.now()
         );
 
         UpdateUserProfileRequest request = new UpdateUserProfileRequest();
@@ -111,7 +111,7 @@ public class UserControllerTest {
                 "mauricio@example.com",
                 "Old Name",
                 "github",
-                LocalDateTime.now()
+                OffsetDateTime.now()
         );
 
         UpdateUserProfileRequest request = new UpdateUserProfileRequest();
@@ -135,7 +135,7 @@ public class UserControllerTest {
                 "mauricio@example.com",
                 "Mauricio Reynoso",
                 "github",
-                LocalDateTime.now()
+                OffsetDateTime.now()
         );
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));

@@ -1,13 +1,21 @@
 package com.group3.backend.controller;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.group3.backend.dto.UpdateUserProfileRequest;
 import com.group3.backend.entity.User;
 import com.group3.backend.repository.UserRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * REST controller for managing user profile and account endpoints.
@@ -35,7 +43,7 @@ public class UserController {
 
     @PutMapping("/{id}/profile")
     public ResponseEntity<User> updateUserProfile(@PathVariable UUID id,
-                                                  @RequestBody UpdateUserProfileRequest request) {
+        @RequestBody UpdateUserProfileRequest request) {
         Optional<User> existingUser = userRepository.findById(id);
 
         if (existingUser.isEmpty()) {

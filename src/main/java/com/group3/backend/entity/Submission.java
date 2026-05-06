@@ -17,8 +17,8 @@ public class Submission {
     @Column(columnDefinition = "TEXT")
     private String code;
 
-    private String status; // Accepted, Wrong Answer, etc.
-    private Integer timeTaken; // in seconds
+    private String status;
+    private Integer timeTaken;
     private LocalDateTime createdAt;
 
     public Submission() {}
