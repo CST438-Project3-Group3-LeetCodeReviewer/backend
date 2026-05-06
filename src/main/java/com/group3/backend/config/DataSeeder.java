@@ -22,7 +22,7 @@ public class DataSeeder implements CommandLineRunner {
                     "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
                     "Easy",
                     Arrays.asList("Array", "Hash Map"),
-                    "function twoSum(nums, target) {\n  // Write your solution here\n}"
+                    "def two_sum(nums, target):\n    # Write your solution here\n    pass"
             );
 
             Problem p2 = new Problem(
@@ -30,7 +30,7 @@ public class DataSeeder implements CommandLineRunner {
                     "Given a string s containing just the characters ()[]{} determine if the input string is valid.",
                     "Easy",
                     Arrays.asList("Stack", "String"),
-                    "function isValid(s) {\n  // Write your solution here\n}"
+                    "def is_valid(s):\n    # Write your solution here\n    pass"
             );
 
             Problem p3 = new Problem(
@@ -38,7 +38,7 @@ public class DataSeeder implements CommandLineRunner {
                     "Given a sorted array of integers and a target value, return the index if the target is found. Otherwise return -1.",
                     "Easy",
                     Arrays.asList("Array", "Binary Search"),
-                    "function search(nums, target) {\n  // Write your solution here\n}"
+                    "def search(nums, target):\n    # Write your solution here\n    pass"
             );
 
             problemRepository.saveAll(Arrays.asList(p1, p2, p3));

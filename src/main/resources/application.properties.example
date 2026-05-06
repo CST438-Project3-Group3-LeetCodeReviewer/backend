@@ -1,0 +1,19 @@
+# Copy this file to application.properties for local development.
+# Do not commit real secrets or database passwords.
+
+spring.application.name=backend
+spring.profiles.active=local
+spring.datasource.url=jdbc:postgresql://YOUR_SUPABASE_POOLER_HOST:6543/postgres?connectTimeout=5
+spring.datasource.username=YOUR_SUPABASE_DB_USERNAME
+spring.datasource.password=${SUPABASE_DB_PASSWORD:}
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.datasource.hikari.minimumIdle=0
+
+# Supabase OAuth
+supabase.url=${SUPABASE_URL:}
+supabase.anon-key=${SUPABASE_ANON_KEY:}
+
+# Gemini review
+gemini.api-key=${GEMINI_API_KEY:${GOOGLE_API_KEY:}}
+gemini.model=${GEMINI_MODEL:gemini-2.5-flash}
