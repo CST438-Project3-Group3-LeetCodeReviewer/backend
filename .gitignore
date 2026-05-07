@@ -39,3 +39,4 @@ out/
 ### Local configuration ###
 src/main/resources/application.properties
 application-local.properties
+.DS_Store
